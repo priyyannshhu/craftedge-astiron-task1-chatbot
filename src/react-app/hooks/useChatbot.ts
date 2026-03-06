@@ -36,7 +36,7 @@ interface ChatHistoryItem {
 const MAX_HISTORY_LENGTH = 5;
 
 // Backend API URL
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
