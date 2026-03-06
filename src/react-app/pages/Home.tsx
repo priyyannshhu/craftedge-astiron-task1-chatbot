@@ -121,42 +121,44 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 md:py-28">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Get in Touch</h2>
-            <p className="text-muted-foreground text-lg mb-12">
-              Ready to transform your customer support? Let's talk.
-            </p>
+{/* Contact Section */}
+<section id="contact" className="py-20 md:py-28">
+  <div className="max-w-6xl mx-auto px-6">
+    <div className="max-w-xl mx-auto text-center">
+      <h2 className="text-3xl md:text-4xl font-bold mb-4">Get in Touch</h2>
+      <p className="text-muted-foreground text-lg mb-12">
+        Interested in AI-powered customer assistants or collaboration opportunities? Feel free to reach out.
+      </p>
 
-            <div className="grid gap-6">
-              <ContactItem
-                icon={<Mail className="w-5 h-5" />}
-                label="Email"
-                value="hello@astra-ai.demo"
-              />
-              <ContactItem
-                icon={<Phone className="w-5 h-5" />}
-                label="Phone"
-                value="+1 (555) 123-4567"
-              />
-              <ContactItem
-                icon={<MapPin className="w-5 h-5" />}
-                label="Location"
-                value="San Francisco, CA"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="grid gap-6">
+        <ContactItem
+          icon={<Mail className="w-5 h-5" />}
+          label="Email"
+          value="datapriyyannshhu@gmail.com"
+        />
+        <ContactItem
+          icon={<Phone className="w-5 h-5" />}
+          label="Phone"
+          value="+91 9451660562"
+        />
+        <ContactItem
+          icon={<MapPin className="w-5 h-5" />}
+          label="Location"
+          value="Gorakhpur, Uttar Pradesh, India"
+        />
+      </div>
+    </div>
+  </div>
+</section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center text-sm text-muted-foreground">
-          <p>© 2024 Astra AI Demo. Built to showcase AI-powered customer support.</p>
-        </div>
-      </footer>
+{/* Footer */}
+<footer className="border-t border-border py-8">
+  <div className="max-w-6xl mx-auto px-6 text-center text-sm text-muted-foreground">
+    <p>
+      © 2026 Astra AI Customer Assistant Demo. Developed by Priyanshu Vishwakarma – Intern, Astiron Ventures.
+    </p>
+  </div>
+</footer>
 
       {/* Chatbot Widget */}
       <ChatbotWidget />
