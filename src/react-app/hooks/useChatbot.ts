@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
-// Web Speech API type declarations
+/* Web Speech API types */
 interface SpeechRecognitionType extends EventTarget {
   continuous: boolean;
   interimResults: boolean;
@@ -10,7 +10,7 @@ interface SpeechRecognitionType extends EventTarget {
   onstart: (() => void) | null;
   onend: (() => void) | null;
   onerror: (() => void) | null;
-  onresult: ((event: Event & { results: { [key: number]: { [key: number]: { transcript: string } } } }) => void) | null;
+  onresult: ((event: any) => void) | null;
 }
 
 declare global {
@@ -32,14 +32,10 @@ interface ChatHistoryItem {
   text: string;
 }
 
-// Maximum messages sent to AI context
 const MAX_HISTORY_LENGTH = 5;
 
-// Backend API URL
-const API_URL = import.meta.env.VITE_API_URL || "";
-
 function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
 export function useChatbot() {
@@ -47,7 +43,7 @@ export function useChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: generateId(),
-      text: "Hello! I'm Astra, your AI assistant. How can I help you today?",
+      text: "Hello! I'm your AI assistant. How can I help you today?",
       sender: "bot",
       timestamp: new Date(),
     },
@@ -66,11 +62,11 @@ export function useChatbot() {
     }
   }, []);
 
-  // Build conversation history for Gemini
+  /* Build history for AI context */
   const buildHistory = useCallback((currentMessages: Message[]): ChatHistoryItem[] => {
 
     const relevantMessages = currentMessages
-      .slice(1) // remove welcome message
+      .slice(1)
       .slice(-MAX_HISTORY_LENGTH);
 
     return relevantMessages.map((msg) => ({
@@ -91,28 +87,34 @@ export function useChatbot() {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    let updatedMessages: Message[] = [];
+
+    setMessages((prev) => {
+      updatedMessages = [...prev, userMessage];
+      return updatedMessages;
+    });
+
     setIsTyping(true);
 
     try {
 
-      const history = buildHistory([...messages, userMessage]);
+      const history = buildHistory(updatedMessages);
 
-      const response = await fetch(`${API_URL}/api/chat`, {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message: text.trim(),
-          history: history,
+          history,
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to get response");
+      if (!response.ok || !data) {
+        throw new Error(data?.error || "Failed to get response");
       }
 
       const botResponse = data.response;
@@ -145,8 +147,9 @@ export function useChatbot() {
 
     }
 
-  }, [messages, buildHistory]);
+  }, [buildHistory]);
 
+  /* Text-to-Speech */
   const speakText = useCallback((text: string) => {
 
     if (!synthRef.current) return;
@@ -178,6 +181,7 @@ export function useChatbot() {
 
   }, []);
 
+  /* Voice Input */
   const startListening = useCallback(() => {
 
     const SpeechRecognitionConstructor =
@@ -194,17 +198,11 @@ export function useChatbot() {
     recognition.interimResults = false;
     recognition.lang = "en-US";
 
-    recognition.onstart = () => {
-      setIsListening(true);
-    };
+    recognition.onstart = () => setIsListening(true);
 
-    recognition.onend = () => {
-      setIsListening(false);
-    };
+    recognition.onend = () => setIsListening(false);
 
-    recognition.onerror = () => {
-      setIsListening(false);
-    };
+    recognition.onerror = () => setIsListening(false);
 
     recognitionRef.current = recognition;
 
